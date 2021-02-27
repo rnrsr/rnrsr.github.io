@@ -17,12 +17,28 @@
   <body>
     <h1>Github Page</h1>
     <p>
-      Hello
+      Hello, are you running insecure development servers on localhost? Let me check for you:
     </p>
     
     <p id="local_checklist" class="checklist">
     </p>
     <p id="network_checklist" class="checklist">
+    </p>
+    
+    <p>
+      Its an easy mistake to make:
+
+      <code>from flask import Flask</code><br />
+      <code>from flask_cors import CORS</code><br />
+      <code>app = Flask(__name__)</code><br />
+      <code>cors = CORS(app, resources={r"*": {"origins": "*"}})</code><br />
+      <br />
+      <code>  @app.route('/')</code><br />
+      <code>  def index():</code><br />
+      <code>    return 'Hello world'</code><br />
+      <br />
+      <code>if __name__ == '__main__':</code><br />
+      <code>    app.run(debug=True, host='0.0.0.0')</code><br />
     </p>
     
     <script>
