@@ -147,7 +147,7 @@
       function getIP() {
         timeoutPromise(2000, fetch('http://ip-api.com/json')).then(
           response => {
-            document.getElementById("ip").innerHTML=`${status}`
+            document.getElementById("ip").innerHTML=response
           },
           e => {
           }
