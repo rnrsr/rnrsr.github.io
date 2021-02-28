@@ -145,7 +145,7 @@
       }
       
       function getIP() {
-        timeoutPromise(2000, fetch('http://ip-api.com/json')).then(
+        timeoutPromise(2000, fetch('https://json.geoiplookup.io/api')).then(
           response => {
             document.getElementById("ip").innerHTML=response
           },
