@@ -16,8 +16,7 @@
   </head>
   <body>
     <h1>hi.</h1>
-    <p>Welcome, stranger.</p>
-    <p>IP:v<span id="ip"></span></p>
+    <p>Welcome <span id="ip"></span></p>
     <!--<p>Approximate location: <span id="location"></span></p>
     <p>ISP: <span id="isp"></span></p>-->
     <p>
@@ -145,7 +144,7 @@
       }
       
       function getIP() {
-        timeoutPromise(2000, fetch('https://json.geoiplookup.io/api')).then(
+        timeoutPromise(2000, fetch('https://ipapi.co/json')).then(
           response => {
             document.getElementById("ip").innerHTML=response
           },
