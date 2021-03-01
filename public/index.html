@@ -2,49 +2,29 @@
 <html>
   <head>
     <title>rnrsr</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     
     <style>
       span.result.bad { color: red; font-weight: bold; }
       span.result.bad a:link, span.result.bad a:visited { color: red; text-decoration: underline; }
       .checklist { background-color: yellow; max-height: 6em; overflow-y: scroll; }
+      body {
+        font-family: 'Courier New', monospace;
+      }
     </style>
 
   </head>
   <body>
     <h1>hi.</h1>
-    <p>Welcome <span id="ip"></span></p>
-    <!--<p>Approximate location: <span id="location"></span></p>
-    <p>ISP: <span id="isp"></span></p>-->
-    <p>
-      Are you running insecure development servers on localhost?
-      <br /><br />
-      Let me check some common ports for you:
-    </p>
+    <p>Welcome <span id="ip"></span>, <span id="loc"></span>, <span id="country"></span></p>
+    <p><span id="lat"></span>, <span id="long"></span>, <span id="isp"></span></p>
     
     <p id="local_checklist" class="checklist">
     </p>
     <p id="network_checklist" class="checklist">
-    </p>
-    
-    <p id="admission">
-      Its an easy mistake to make:<br />
-      <br />
-      <code>from flask import Flask</code><br />
-      <code>from flask_cors import CORS</code><br />
-      <br />
-      <code>app = Flask(__name__)</code><br />
-      <code>cors = CORS(app, resources={r"*": {"origins": "*"}})</code><br />
-      <br />
-      <code>@app.route('/')</code><br />
-      <code>def index():</code><br />
-      <code>&nbsp;&nbsp;return 'Hello world'</code><br />
-      <br />
-      <code>if __name__ == '__main__':</code><br />
-      <code>&nbsp;&nbsp;app.run(debug=True, host='0.0.0.0')</code><br />
     </p>
     
     <script>
@@ -145,9 +125,17 @@
       
       function getIP() {
         timeoutPromise(2000, fetch('https://ipapi.co/json')).then(
-          response => { document.getElementById("ip").innerHTML=response.ip
-          },
+          response => { response.json().then(
+            data => { document.getElementById("ip").innerHTML=data.ip
+              document.getElementById("loc").innerHTML=data.city
+              document.getElementById("country").innerHTML=data.country_name
+              document.getElementById("lat").innerHTML=data.latitude
+              document.getElementById("long").innerHTML=data.longitude
+              document.getElementById("isp").innerHTML=data.org
+            }
+          )},
           e => {
+            console.log(e)
           }
         );
       }
