@@ -1,156 +1,179 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+
 <html>
-  <head>
-    <title>rnrsr</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png">
-    <link rel="manifest" href="/public/site.webmanifest">
-    
-    <style>
-      span.result.bad { color: red; font-weight: bold; }
-      span.result.bad a:link, span.result.bad a:visited { color: red; text-decoration: underline; }
-      .checklist { background-color: yellow; max-height: 6em; overflow-y: scroll; }
-      body {
-        font-family: 'Courier New', monospace;
-      }
-    </style>
 
-  </head>
-  <body>
-    <h1>hi.</h1>
-    <p>Welcome <span id="ip"></span>, <span id="loc"></span>, <span id="country"></span></p>
-    <p><span id="lat"></span>, <span id="long"></span>, <span id="isp"></span></p>
-    
-    <p id="local_checklist" class="checklist">
-    </p>
-    <p id="network_checklist" class="checklist">
-    </p>
-    
-    <script>
-      const localChecklist = document.getElementById("local_checklist");
-      const networkChecklist = document.getElementById("network_checklist");
-      const portsToTry = [
-        80, 81, 88,
-        3000, 3001, 3030, 3031, 3333,
-        4000, 4001, 4040, 4041, 4444,
-        5000, 5001, 5050, 5051, 5555,
-        6000, 6001, 6060, 6061, 6666,
-        7000, 7001, 7070, 7071, 7777,
-        8000, 8001, 8080, 8081, 8888,
-        9000, 9001, 9090, 9091, 9999,
-      ];
+<head>
+	<title>rnrsr.github.io</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/public/images/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/public/images/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png">
+	<link rel="manifest" href="/public/site.webmanifest">
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" />
+	</noscript>
+</head>
 
-      function logLine(checklist, text, className) {
-        const span = document.createElement("span");
-        span.innerHTML = text + " ";
-        span.setAttribute("class", "result" + " " + className);
-        checklist.appendChild(span);
-        checklist.scrollTop = checklist.scrollHeight;
-      }
+<body class="is-preload">
 
-      function timeoutPromise(ms, promise) {
-        return new Promise((resolve, reject) => {
-          const timeoutId = setTimeout(() => {
-            reject(new Error("TIMEOUT"));
-          }, ms);
-          promise.then(
-            res => {
-              clearTimeout(timeoutId);
-              resolve(res);
-            },
-            err => {
-              clearTimeout(timeoutId);
-              reject(err);
-            }
-          );
-        })
-      }
+	<div id="wrapper">
 
-      function getLocalNetworkPrefix(cb) {
-        var RTCPeerConnection = window.RTCPeerConnection || webkitRTCPeerConnection || mozRTCPeerConnection;
-        var peerConn = new RTCPeerConnection({'iceServers': [{'urls': ['stun:stun.l.google.com:19302']}]});
-        var dataChannel = peerConn.createDataChannel('test');  // Needs something added for some reason
-        peerConn.createOffer({}).then((desc) => peerConn.setLocalDescription(desc));
-        peerConn.onicecandidate = (e) => {
-          if (e.candidate == null) {
-            cb(/(192\.168\.[0-9]+\.)[0-9]+/.exec(peerConn.localDescription.sdp)[1]);
-          }
-        };
-      }
+		<header id="header">
+			<h1><a href="index.html"><strong>rnrsr</strong>.github.io</a></h1>
+			...Welcome... <span id="ip"></span>, <span id="loc"></span>, <span id="country"></span>
+			<span id="lat"></span>, <span id="long"></span>, <span id="isp"></span>
+			<nav>
+				<ul>
+					<li><a href="#footer" class="icon solid fa-info-circle">About</a></li>
+				</ul>
+			</nav>
+		</header>
 
-      function scanHost(hostname, checklist, cb) {
-        logLine(checklist, `Scanning ${hostname} ...`, "");
-        function loop(portIndex) {
-          if (portIndex >= portsToTry.length) {
-            logLine(checklist, `${hostname} complete.`, "");
-            cb();
-          } else {
-            const port = portsToTry[portIndex];
-            const url = `http://${hostname}:${port}`;
-            timeoutPromise(2000, fetch(url)).then(
-              response => {
-                logLine(checklist, `<a href="http://${hostname}:${port}" target="_blank">${hostname}:${port}</a> is available!`, "bad");
-                loop(portIndex+1);
-              },
-              e => {
-                if (e.message == "TIMEOUT") {
-                  // Assume this host is unreachable. Don't waste time; go to the next host.
-                  logLine(checklist, `unreachable.`, "");
-                  cb();
-                } else {
-                  loop(portIndex+1);
-                }
-              }
-            );
-          }
-        }
-        loop(0);
-      }
+		<div id="main">
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/fWkt9GiwKiw?si=rAr1LQUxXRYcYVTx"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/TimXnbtZp2c?si=DsS6cHJZP38OncSF"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/fSrce-NS4Q0?si=XnRx3Do71mwU2LpC"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/zK1QrVzgWlQ?si=burQkTOoA-2upQaY"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
 
-      function scanNetwork(localNetworkPrefix) {
-        logLine(networkChecklist, "Scanning network ...", "");
-        function loop(lowByte) {
-          if (lowByte > 255) {
-            logLine(networkChecklist, `Network scan complete.`, "");
-          } else {
-            const hostname = localNetworkPrefix + lowByte;
-            scanHost(hostname, networkChecklist, () => {
-              loop(lowByte+1);
-            });
-          }
-        }
-        loop(1);
-      }
-      
-      function getIP() {
-        timeoutPromise(2000, fetch('https://ipapi.co/json')).then(
-          response => { response.json().then(
-            data => { document.getElementById("ip").innerHTML=data.ip
-              document.getElementById("loc").innerHTML=data.city
-              document.getElementById("country").innerHTML=data.country_name
-              document.getElementById("lat").innerHTML=data.latitude
-              document.getElementById("long").innerHTML=data.longitude
-              document.getElementById("isp").innerHTML=data.org
-            }
-          )},
-          e => {
-            console.log(e)
-          }
-        );
-      }
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/8YgKgYgZhlg?si=Jd_U3HrBMUanit21"
+						title="Clarissa Connelly" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/Tr719OP6sTI?si=J7QfYgJTGvW_Ebm4"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/X-aKKYYkb4w?si=vxCWqFS4YW5BmD2H"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/sXvG_-jnXv0?si=lHvDRMynY8x_077x"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/sIkhewd69SE?si=w7B0oAWNlJjF7grs"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/Dwij5-mq7Mg?si=d321AxERN-cGyCmh"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.retrogames.cc/embed/41904-wipeout-2097.html" width="600" height="450"
+						frameborder="no" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"
+						scrolling="no"></iframe>
+				</div>
+			</article>
+			<article class="thumb">
+				<div class="videoWrapper">
+					<iframe src="https://www.youtube.com/embed/dIl4QFKTHBo?si=9UcXVsW0Jgb_FKYO"
+						title="YouTube video player" frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				</div>
+			</article>
 
-      getIP();
-      scanHost("localhost", localChecklist, () => {
-        getLocalNetworkPrefix(prefix => {
-          scanNetwork(prefix);
-        })
-      });
-    </script>
-    
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/8YgKgYgZhlg?si=Js_sbBSE5lrfuoEZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    
-    <iframe src="https://www.retrogames.cc/embed/41904-wipeout-2097.html" width="600" height="450" frameborder="no" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" scrolling="no"></iframe>
-    
-  </body>
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer" class="panel">
+			<div class="inner split">
+				<div>
+					<section>
+						<h2>What is this madness</h2>
+						<p>bored...</p>
+					</section>
+					<section>
+						<h2>Follow me on ...</h2>
+						<ul class="icons">
+							<!-- <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li> -->
+							<!-- <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li> -->
+							<!-- <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li> -->
+							<li><a href="https://www.github.com/rnrsr" class="icon brands fa-github"><span
+										class="label">GitHub</span></a></li>
+							<!-- <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li> -->
+							<!-- <li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li> -->
+						</ul>
+					</section>
+				</div>
+				<div>
+					<section>
+						<span id="local_checklist" class="checklist">
+						</span>
+						<span id="network_checklist" class="checklist">
+						</span>
+					</section>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.poptrox.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="assets/js/rnrsr.js"></script>
+
+</body>
+
 </html>
