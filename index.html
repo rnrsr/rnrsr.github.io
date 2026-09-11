@@ -26,6 +26,7 @@
 			<span id="lat"></span>, <span id="long"></span>, <span id="isp"></span>
 			<nav>
 				<ul>
+					<li><a href="#" id="play-soundtrack" class="icon solid fa-play-circle">Play music</a></li>
 					<li><a href="#footer" class="icon solid fa-info-circle">About</a></li>
 				</ul>
 			</nav>
@@ -33,10 +34,7 @@
 
 		<div id="main">
 			<div id="background-audio" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none;">
-				<iframe id="soundtrack" width="1" height="1"
-					src="https://www.youtube.com/embed/go6-MliYCAs?autoplay=1&loop=1&playlist=go6-MliYCAs&controls=0"
-					title="Background soundtrack" frameborder="0"
-					allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+				<div id="soundtrack-player"></div>
 			</div>
 		</div>
 
@@ -81,6 +79,7 @@
 	<script src="assets/js/breakpoints.min.js"></script>
 	<script src="assets/js/util.js"></script>
 	<script src="assets/js/main.js"></script>
+	<script src="https://www.youtube.com/iframe_api"></script>
 	<script src="assets/js/rnrsr.js"></script>
 
 </body>

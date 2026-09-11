@@ -1,5 +1,49 @@
 const localChecklist = document.getElementById("local_checklist");
 const networkChecklist = document.getElementById("network_checklist");
+
+const SOUNDTRACK_VIDEO_ID = "go6-MliYCAs";
+let soundtrackPlayer = null;
+
+// Called automatically by the YouTube IFrame API once it has loaded (script tag in index.html).
+function onYouTubeIframeAPIReady() {
+  soundtrackPlayer = new YT.Player("soundtrack-player", {
+    videoId: SOUNDTRACK_VIDEO_ID,
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      loop: 1,
+      playlist: SOUNDTRACK_VIDEO_ID // required by YouTube for a single video to loop
+    },
+    events: {
+      onStateChange: onSoundtrackStateChange
+    }
+  });
+}
+
+function onSoundtrackStateChange(event) {
+  const btn = document.getElementById("play-soundtrack");
+  if (!btn) return;
+  const isPlaying = event.data === YT.PlayerState.PLAYING;
+  btn.classList.toggle("fa-play-circle", !isPlaying);
+  btn.classList.toggle("fa-pause-circle", isPlaying);
+}
+
+function toggleSoundtrack(e) {
+  e.preventDefault();
+  if (!soundtrackPlayer || typeof soundtrackPlayer.getPlayerState !== "function") {
+    return;
+  }
+  if (soundtrackPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+    soundtrackPlayer.pauseVideo();
+  } else {
+    soundtrackPlayer.playVideo();
+  }
+}
+
+const playSoundtrackBtn = document.getElementById("play-soundtrack");
+if (playSoundtrackBtn) {
+  playSoundtrackBtn.addEventListener("click", toggleSoundtrack);
+}
 const portsToTry = [
   80, 81, 88,
   3000, 3001, 3030, 3031, 3333,
