@@ -2063,3 +2063,62 @@ input, select, textarea {
 		#footer .copyright a {
 			color: inherit;
 		}
+
+/* Ghost soundtrack toggle */
+
+	#main {
+		align-items: center;
+		justify-content: center;
+		min-height: calc(100vh - 8em);
+	}
+
+	#ghost-toggle {
+		background: none;
+		border: 0;
+		cursor: pointer;
+		display: block;
+		margin: 0 auto;
+		padding: 0;
+	}
+
+		#ghost-toggle:focus-visible {
+			outline: 2px solid #34a58e;
+			outline-offset: 8px;
+		}
+
+		#ghost-toggle #ghost {
+			animation: ghost-bob 3s ease-in-out infinite;
+			color: #a0a0a1;
+			font-family: 'Courier New', monospace;
+			font-size: 1.75em;
+			line-height: 1.2;
+			margin: 0;
+			text-align: center;
+			transition: color 0.3s ease;
+			white-space: pre;
+		}
+
+		#ghost-toggle:hover #ghost {
+			color: #ffffff;
+		}
+
+		#ghost-toggle.is-playing #ghost {
+			color: #34a58e;
+		}
+
+	@keyframes ghost-bob {
+		0%, 100% { transform: translateY(0); }
+		50% { transform: translateY(-0.5em); }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#ghost-toggle #ghost {
+			animation: none;
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		#ghost-toggle #ghost {
+			font-size: 1.1em;
+		}
+	}

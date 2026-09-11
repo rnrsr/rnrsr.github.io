@@ -21,11 +21,21 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onSoundtrackStateChange(event) {
-  const btn = document.getElementById("play-soundtrack");
-  if (!btn) return;
+  const navBtn = document.getElementById("play-soundtrack");
+  const ghostBtn = document.getElementById("ghost-toggle");
   const isPlaying = event.data === YT.PlayerState.PLAYING;
-  btn.classList.toggle("fa-play-circle", !isPlaying);
-  btn.classList.toggle("fa-pause-circle", isPlaying);
+
+  if (navBtn) {
+    navBtn.classList.toggle("fa-play-circle", !isPlaying);
+    navBtn.classList.toggle("fa-pause-circle", isPlaying);
+    navBtn.setAttribute("aria-pressed", String(isPlaying));
+  }
+  if (ghostBtn) {
+    ghostBtn.classList.toggle("is-playing", isPlaying);
+    ghostBtn.setAttribute("aria-pressed", String(isPlaying));
+    ghostBtn.setAttribute("aria-label", isPlaying ? "Pause soundtrack" : "Play soundtrack");
+  }
+  setGhostSinging(isPlaying);
 }
 
 function toggleSoundtrack(e) {
@@ -43,6 +53,129 @@ function toggleSoundtrack(e) {
 const playSoundtrackBtn = document.getElementById("play-soundtrack");
 if (playSoundtrackBtn) {
   playSoundtrackBtn.addEventListener("click", toggleSoundtrack);
+}
+
+const ghostToggleBtn = document.getElementById("ghost-toggle");
+if (ghostToggleBtn) {
+  ghostToggleBtn.addEventListener("click", toggleSoundtrack);
+}
+
+// --- Ghost ASCII animation (inspired by ghostty.org's animated terminal ghost) ---
+
+const GHOST_IDLE_FRAMES = [
+  `     .-'''''-.
+    /         \\
+   |  O     O  |
+   |           |
+   |   .....   |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+     v  v  v  v`,
+  `     .-'''''-.
+    /         \\
+   |  O     O  |
+   |           |
+   |   .....   |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+      v  v  v  v`,
+  `     .-'''''-.
+    /         \\
+   |  -     -  |
+   |           |
+   |   .....   |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+     v  v  v  v`,
+  `     .-'''''-.
+    /         \\
+   |  O     O  |
+   |           |
+   |   .....   |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+      v  v  v  v`
+];
+
+const GHOST_SINGING_FRAMES = [
+  `     .-'''''-.
+    /         \\
+   |  O     O  |
+   |           |
+   |    (o)    |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+     v  v  v  v`,
+  `     .-'''''-.
+    /         \\
+   |  O     O  |
+   |           |
+   |   ~~~~~   |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+      v  v  v  v`,
+  `     .-'''''-.
+    /         \\
+   |  O     O  |
+   |           |
+   |    (o)    |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+     v  v  v  v`,
+  `     .-'''''-.
+    /         \\
+   |  O     O  |
+   |           |
+   |   ~~~~~   |
+   |           |
+   |           |
+    \\         /
+     '.     .'
+      v  v  v  v`
+];
+
+const ghostEl = document.getElementById("ghost");
+const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let ghostFrames = GHOST_IDLE_FRAMES;
+let ghostFrameIndex = 0;
+let ghostLastFrameTime = 0;
+const GHOST_FRAME_MS = 280;
+
+function setGhostSinging(isSinging) {
+  ghostFrames = isSinging ? GHOST_SINGING_FRAMES : GHOST_IDLE_FRAMES;
+  ghostFrameIndex = 0;
+}
+
+function renderGhostFrame(time) {
+  if (ghostEl) {
+    if (time - ghostLastFrameTime >= GHOST_FRAME_MS) {
+      ghostEl.textContent = ghostFrames[ghostFrameIndex];
+      ghostFrameIndex = (ghostFrameIndex + 1) % ghostFrames.length;
+      ghostLastFrameTime = time;
+    }
+    requestAnimationFrame(renderGhostFrame);
+  }
+}
+
+if (ghostEl) {
+  ghostEl.textContent = ghostFrames[0];
+  if (!prefersReducedMotion) {
+    requestAnimationFrame(renderGhostFrame);
+  }
 }
 const portsToTry = [
   80, 81, 88,
